@@ -19,9 +19,11 @@ RUN mkdir -p /usr/bin/v2ray && \
 
 # Tambahkan file konfigurasi
 COPY config.json /etc/v2ray/config.json
+COPY cl.key /etc/v2ray/cl.key
+COPY cl.pem /etc/v2ray/cl.pem
 
 # Ekspose port Trojan WS
-EXPOSE 443
+EXPOSE 4433
 
 # Jalankan v2ray dengan config.json
 ENTRYPOINT ["/usr/bin/v2ray/v2ray", "-config=/etc/v2ray/config.json"]
