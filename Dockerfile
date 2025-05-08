@@ -15,7 +15,4 @@ RUN mkdir -p ~/.vnc && \
     echo $VNCPASS | vncpasswd -f > ~/.vnc/passwd && \
     chmod 600 ~/.vnc/passwd
 
-Expose port VNC
-EXPOSE 5900
-
 CMD ["x11vnc", "-forever", "-usepw", "-create"]
