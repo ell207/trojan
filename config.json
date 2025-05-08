@@ -1,0 +1,43 @@
+{
+  "inbounds": [
+    {
+      "port": 4433,
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "password": "Hago4321",
+            "email": "andgz0067@gmail.com"
+          }
+        ],
+        "fallbacks": [
+          {
+            "dest": 80,
+            "xver": 1
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "cl.pem",
+              "keyFile": "cl.key"
+            }
+          ]
+        },
+        "wsSettings": {
+          "path": "/bebas"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
+}
