@@ -6,7 +6,6 @@ RUN apk update && apk add --no-cache \
     xfce4 \
     xfce4-terminal \
     tigervnc \
-    tigervnc-server \
     && rm -rf /var/cache/apk/*
 
 
