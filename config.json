@@ -1,43 +1,22 @@
 {
-  "inbounds": [
-    {
-      "port": 4433,
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {
-            "password": "Hago4321",
-            "email": "andgz0067@gmail.com"
-          }
-        ],
-        "fallbacks": [
-          {
-            "dest": 80,
-            "xver": 1
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "/etc/v2ray/cl.pem",
-              "keyFile": "/etc/v2ray/cl.key"
-            }
-          ]
-        },
-        "wsSettings": {
-          "path": "/bebas"
-        }
-      }
-    }
+  "run_type": "server",
+  "local_addr": "0.0.0.0",
+  "local_port": 4433,
+  "remote_addr": "www.freefiremobile.com",
+  "remote_port": 443,
+  "password": [
+    "eldaa"
   ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {}
-    }
-  ]
+  "ssl": {
+    "cert": "/mnt/trojan/cl.pem",
+    "key": "/mnt/trojan/cl.key",
+    "sni": "www.freefiremobile.com",
+    "fallback_addr": "127.0.0.1",
+    "fallback_port": 80
+  },
+  "websocket": {
+    "enabled": true,
+    "path": "/trojanws",
+    "host": "www.freefiremobile.com"
+  }
 }
