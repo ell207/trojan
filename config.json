@@ -17,8 +17,8 @@
         "tlsSettings": {
           "certificates": [
             {
-              "certificateFile": "/root/trojan/cl.pem",
-              "keyFile": "/root/trojan/cl.key"
+              "certificateFile": "/xray/cl.pem",
+              "keyFile": "/xray/cl.key"
             }
           ]
         },
