@@ -1,22 +1,40 @@
 {
-  "run_type": "server",
-  "local_addr": "0.0.0.0",
-  "local_port": 4433,
-  "remote_addr": "www.freefiremobile.com",
-  "remote_port": 443,
-  "password": [
-    "eldaa"
+  "inbounds": [
+    {
+      "port": 4433,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "f0ff3b19-71ae-4020-8741-3a4ed21e2e3b",
+            "alterId": 0
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/root/trojan/cl.pem",
+              "keyFile": "/root/trojan/cl.key"
+            }
+          ]
+        },
+        "wsSettings": {
+          "path": "/websocket",
+          "headers": {
+            "Host": "1.1.1.1"
+          }
+        }
+      }
+    }
   ],
-  "ssl": {
-    "cert": "/root/trojan/cl.pem",
-    "key": "/root/trojan/cl.key",
-    "sni": "www.freefiremobile.com",
-    "fallback_addr": "127.0.0.1",
-    "fallback_port": 80
-  },
-  "websocket": {
-    "enabled": true,
-    "path": "/trojanws",
-    "host": "www.freefiremobile.com"
-  }
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
 }
