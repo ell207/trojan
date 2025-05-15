@@ -1,24 +1,18 @@
 FROM alpine:latest
 
-# Install curl, unzip dan bash (opsional)
 RUN apk add --no-cache curl unzip
 
-# Buat direktori kerja
-WORKDIR /xray
+# Download V2Ray Core
+RUN curl -L -o /v2ray.zip https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip && \
+    unzip /v2ray.zip -d /v2ray && \
+    chmod +x /v2ray/v2ray /v2ray/v2ctl && \
+    mv /v2ray /opt/v2ray
 
-# Unduh Xray-core
-RUN curl -L -o xray.zip https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip && \
-    unzip xray.zip && \
-    chmod +x xray && \
-    rm xray.zip
+WORKDIR /opt/v2ray
+COPY config.json .
+COPY cl.pem .
+COPY cl.key .
 
-# Salin konfigurasi dan sertifikat TLS
-COPY config.json /xray/config.json
-COPY cl.key /xray/cl.key
-COPY cl.pem /xray/cl.pem
+EXPOSE 443
 
-# Buka port 4433
-EXPOSE 4433
-
-# Jalankan Xray
-CMD ["./xray", "-config", "/xray/config.json"]
+CMD ["./v2ray", "-config", "config.json"]
