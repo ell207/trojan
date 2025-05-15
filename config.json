@@ -17,24 +17,20 @@
         "tlsSettings": {
           "certificates": [
             {
-              "certificateFile": "/xray/cl.pem",
-              "keyFile": "/xray/cl.key"
+              "certificateFile": "cl.pem",
+              "keyFile": "cl.key"
             }
           ]
         },
         "wsSettings": {
-          "path": "/websocket",
-          "headers": {
-            "Host": "8.8.8.8"
-          }
+          "path": "/ws"
         }
       }
     }
   ],
   "outbounds": [
     {
-      "protocol": "freedom",
-      "settings": {}
+      "protocol": "freedom"
     }
   ]
 }
