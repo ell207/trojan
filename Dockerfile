@@ -1,18 +1,22 @@
 FROM alpine:latest
 
+# Install curl dan unzip
 RUN apk add --no-cache curl unzip
 
-# Download V2Ray Core
-RUN curl -L -o /v2ray.zip https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip && \
-    unzip /v2ray.zip -d /v2ray && \
-    chmod +x /v2ray/v2ray /v2ray/v2ctl && \
-    mv /v2ray /opt/v2ray
+# Buat direktori kerja
+WORKDIR /v2ray
 
-WORKDIR /opt/v2ray
-COPY config.json .
-COPY cl.pem .
-COPY cl.key .
+# Unduh dan ekstrak V2Ray Core
+RUN curl -L -o v2ray.zip https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip && \
+    unzip v2ray.zip && \
+    chmod +x v2ray v2ctl && \
+    rm v2ray.zip
 
-EXPOSE 443
+# Salin konfigurasi dan sertifikat
+COPY config.json /v2ray
+COPY cl.pem /v2ray
+COPY cl.key /v2ray
 
-CMD ["./v2ray", "-config", "config.json"]
+EXPOSE 4433
+
+CMD ["./v2ray", "-config", "/v2ray/config.json"]
