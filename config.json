@@ -25,7 +25,7 @@
         "wsSettings": {
           "path": "/websocket",
           "headers": {
-            "Host": "www.freefiremobile.com"
+            "Host": "claw.lutfiterminal.biz.id"
           }
         }
       }
