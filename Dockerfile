@@ -1,16 +1,24 @@
 FROM alpine:latest
 
-# Install curl dan unzip
-RUN apk add --no-cache curl unzip v2ray
+# Install dependencies
+RUN apk add --no-cache curl unzip
 
-# Buat direktori kerja
-WORKDIR /v2ray
+# Set workdir
+WORKDIR /trojan
 
-# Salin konfigurasi dan sertifikat
-COPY config.json /v2ray
-COPY cl.pem /v2ray
-COPY cl.key /v2ray
+# Install Trojan-Go
+RUN curl -L -o trojan-go.zip https://github.com/p4gefau1t/trojan-go/releases/latest/download/trojan-go-linux-amd64.zip \
+    && unzip trojan-go.zip \
+    && chmod +x trojan-go \
+    && rm trojan-go.zip
 
+# Copy config and SSL certs
+COPY config.json /trojan/config.json
+COPY cl.pem /trojan/cl.pem
+COPY cl.key /trojan/cl.key
+
+# Expose TLS port
 EXPOSE 4433
 
-CMD ["v2ray", "run", "-config", "/v2ray/config.json"]
+# Run Trojan-Go
+CMD ["./trojan/trojan-go", "-config", "/trojan/config.json"]
