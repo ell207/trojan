@@ -6,8 +6,8 @@
     "eldaa"
   ],
   "ssl": {
-    "cert": "./ssl/fullchain.pem",
-    "key": "./ssl/privkey.pem",
+    "cert": "/trojan/cl.pem",
+    "key": "/trojan/cl.key",
     "sni": "www.freefiremobile.com"
   },
   "websocket": {
