@@ -1,36 +1,18 @@
 {
-  "inbounds": [
-    {
-      "port": 4433,
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "f0ff3b19-71ae-4020-8741-3a4ed21e2e3b",
-            "alterId": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "certificates": [
-            {
-              "certificateFile": "cl.pem",
-              "keyFile": "cl.key"
-            }
-          ]
-        },
-        "wsSettings": {
-          "path": "/ws"
-        }
-      }
-    }
+  "run_type": "server",
+  "local_addr": "0.0.0.0",
+  "local_port": 4433,
+  "password": [
+    "eldaa"
   ],
-  "outbounds": [
-    {
-      "protocol": "freedom"
-    }
-  ]
+  "ssl": {
+    "cert": "./ssl/fullchain.pem",
+    "key": "./ssl/privkey.pem",
+    "sni": "www.freefiremobile.com"
+  },
+  "websocket": {
+    "enabled": true,
+    "path": "/ws",
+    "host": "www.freefiremobile.com"
+  }
 }
