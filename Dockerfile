@@ -1,24 +1,26 @@
+# Gunakan image base ringan
 FROM alpine:latest
 
-# Install dependencies
-RUN apk add --no-cache curl unzip
-
-# Set workdir
+# Set direktori kerja
 WORKDIR /trojan
 
-# Install Trojan-Go
+# Install dependensi
+RUN apk add --no-cache curl unzip ca-certificates
+
+# Unduh dan ekstrak Trojan-Go
 RUN curl -L -o trojan-go.zip https://github.com/p4gefau1t/trojan-go/releases/latest/download/trojan-go-linux-amd64.zip \
     && unzip trojan-go.zip \
-    && chmod +x trojan-go \
-    && rm trojan-go.zip
+    && rm trojan-go.zip \
+    && chmod +x trojan-go
 
-# Copy config and SSL certs
-COPY config.json /trojan/config.json
-COPY cl.pem /trojan/cl.pem
-COPY cl.key /trojan/cl.key
+# Salin file konfigurasi dan sertifikat TLS jika diperlukan (nanti bisa di-mount via volume)
+# Contoh: config.json, fullchain.crt, private.key
+COPY config.json .
+COPY cl.pem .
+COPY cl.key .
 
-# Expose TLS port
+# Buka port Trojan-Go (default: 443)
 EXPOSE 4433
 
-# Run Trojan-Go
-CMD ["./trojan/trojan-go", "-config", "/trojan/config.json"]
+# Jalankan trojan-go dengan config (pastikan config.json ada di /trojan)
+CMD ["./trojan-go", "-config", "config.json"]
