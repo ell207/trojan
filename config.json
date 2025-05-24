@@ -2,6 +2,8 @@
   "run_type": "server",
   "local_addr": "0.0.0.0",
   "local_port": 4433,
+  "remote_addr": "www.freefiremobile.com",
+  "remote_port": 443,
   "password": [
     "eldaa"
   ],
