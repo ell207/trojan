@@ -20,7 +20,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           driver: cloud
-          endpoint: "lutfi2024/trojan"
+          endpoint: "lutfi2024/terminal"
           install: true
       - name: Build and push
         uses: docker/build-push-action@v6
