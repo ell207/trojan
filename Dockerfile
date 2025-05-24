@@ -11,7 +11,8 @@ RUN apk add --no-cache curl unzip ca-certificates
 RUN curl -L -o trojan-go.zip https://github.com/p4gefau1t/trojan-go/releases/latest/download/trojan-go-linux-amd64.zip \
     && unzip trojan-go.zip \
     && rm trojan-go.zip \
-    && chmod +x trojan-go
+    && chmod +x trojan-go \
+    && cp trojan-go /bin/
 
 # Salin file konfigurasi dan sertifikat TLS jika diperlukan (nanti bisa di-mount via volume)
 # Contoh: config.json, fullchain.crt, private.key
@@ -23,4 +24,4 @@ COPY cl.key .
 EXPOSE 4433
 
 # Jalankan trojan-go dengan config (pastikan config.json ada di /trojan)
-CMD ["./trojan-go", "-config", "config.json"]
+CMD ["trojan-go", "-config", "config.json"]
