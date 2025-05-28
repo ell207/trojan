@@ -1,27 +1,52 @@
-# Gunakan image base ringan
-FROM alpine:latest
+FROM ubuntu:22.04
 
-# Set direktori kerja
-WORKDIR /trojan
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependensi
-RUN apk add --no-cache curl unzip ca-certificates
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    qemu-system-x86 \
+    adb \
+    scrcpy \
+    wget curl \
+    unzip \
+    x11vnc \
+    xvfb \
+    openbox \
+    net-tools \
+    iputils-ping \
+    && apt-get clean
 
-# Unduh dan ekstrak Trojan-Go
-RUN curl -L -o trojan-go.zip https://github.com/p4gefau1t/trojan-go/releases/latest/download/trojan-go-linux-amd64.zip \
-    && unzip trojan-go.zip \
-    && rm trojan-go.zip \
-    && chmod +x trojan-go \
-    && cp trojan-go /bin/
+# Add user
+RUN useradd -m android
+USER android
+WORKDIR /home/android
 
-# Salin file konfigurasi dan sertifikat TLS jika diperlukan (nanti bisa di-mount via volume)
-# Contoh: config.json, fullchain.crt, private.key
-COPY config.json .
-COPY cl.pem .
-COPY cl.key .
+# Download Android-x86 ISO (Android 9.0)
+RUN mkdir iso && cd iso && \
+    wget -O android-x86.iso https://osdn.net/dl/android-x86/android-x86_64-9.0-r2.iso
 
-# Buka port Trojan-Go (default: 443)
-EXPOSE 4433
+# Startup script: Launch QEMU and enable ADB TCP
+RUN echo '#!/bin/bash\n\
+Xvfb :1 -screen 0 1280x720x24 &\n\
+export DISPLAY=:1\n\
+openbox &\n\
+# Launch Android-x86 in QEMU with hostfwd for adb\n\
+qemu-system-x86_64 \\\n\
+  -m 5G \\\n\
+  -smp 5 \\\n\
+  -cdrom /home/android/iso/android-x86.iso \\\n\
+  -boot d \\\n\
+  -net nic -net user,hostfwd=tcp::5555-:5555 \\\n\
+  -vga virtio \\\n\
+  -display sdl &\n\
+# Wait for Android to boot\n\
+sleep 60\n\
+# Attempt to connect ADB and enable TCP/IP mode\n\
+adb connect 127.0.0.1:5555\n\
+adb -s 127.0.0.1:5555 shell \"setprop service.adb.tcp.port 5555; stop adbd; start adbd\"\n\
+sleep 5\n\
+adb connect 127.0.0.1:5555\n\
+# Launch scrcpy\n\
+scrcpy --serial 127.0.0.1:5555 --bit-rate 8M --max-size 1024\n' > /home/android/start.sh && chmod +x /home/android/start.sh
 
-# Jalankan trojan-go dengan config (pastikan config.json ada di /trojan)
-CMD ["trojan-go", "-config", "config.json"]
+ENTRYPOINT ["/home/android/start.sh"]
