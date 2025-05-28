@@ -23,7 +23,7 @@ WORKDIR /home/android
 
 # Download Android-x86 ISO (Android 9.0)
 RUN mkdir iso && cd iso && \
-    wget -O android-x86.iso https://osdn.net/dl/android-x86/android-x86_64-9.0-r2.iso
+    wget -O android-x86.iso https://archive.org/download/android-x86_64-9.0-r2_202201/android-x86_64-9.0-r2.iso
 
 # Startup script: Launch QEMU and enable ADB TCP
 RUN echo '#!/bin/bash\n\
