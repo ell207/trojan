@@ -3,9 +3,28 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISPLAY=:1
 
-RUN apt-get update && apt-get install -y software-properties-common \
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    apt-transport-https \
+    ca-certificates \
+    gnupg \
+    curl \
     && add-apt-repository ppa:gregory-hainaut/pcsx2.official.ppa -y \
-    && apt-get update && apt-get install -y pcsx2 x11vnc xvfb fluxbox novnc websockify python3 python3-pip nginx curl sudo inotify-tools libgl1-mesa-glx libgtk2.0-0 libxcb-xinerama0 \
+    && apt-get update && apt-get install -y \
+    pcsx2 \
+    x11vnc \
+    xvfb \
+    fluxbox \
+    novnc \
+    websockify \
+    python3 \
+    python3-pip \
+    nginx \
+    sudo \
+    inotify-tools \
+    libgl1-mesa-glx \
+    libgtk2.0-0 \
+    libxcb-xinerama0 \
     && pip3 install flask \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
