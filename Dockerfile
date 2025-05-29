@@ -1,52 +1,48 @@
 FROM ubuntu:22.04
 
+LABEL maintainer="eldaa@example.com"
+
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DISPLAY=:1
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    qemu-system-x86 \
-    adb \
-    scrcpy \
-    wget curl \
-    unzip \
+    pcsx2 \
     x11vnc \
     xvfb \
-    openbox \
-    net-tools \
-    iputils-ping \
-    && apt-get clean
+    fluxbox \
+    novnc \
+    websockify \
+    python3 \
+    python3-pip \
+    nginx \
+    curl \
+    sudo \
+    inotify-tools \
+    libgl1-mesa-glx \
+    libgtk2.0-0 \
+    && pip3 install flask \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Add user
-RUN useradd -m android
-USER android
-WORKDIR /home/android
+# Create user
+RUN useradd -ms /bin/bash ps2user
+USER ps2user
+WORKDIR /home/ps2user
 
-# Download Android-x86 ISO (Android 9.0)
-RUN mkdir iso && cd iso && \
-    wget -O android-x86.iso https://archive.org/download/android-x86_64-9.0-r2_202201/android-x86_64-9.0-r2.iso
+# Create necessary directories
+RUN mkdir -p /home/ps2user/games \
+             /home/ps2user/uploads \
+             /home/ps2user/.config/PCSX2/bios
 
-# Startup script: Launch QEMU and enable ADB TCP
-RUN echo '#!/bin/bash\n\
-Xvfb :1 -screen 0 1280x720x24 &\n\
-export DISPLAY=:1\n\
-openbox &\n\
-# Launch Android-x86 in QEMU with hostfwd for adb\n\
-qemu-system-x86_64 \\\n\
-  -m 5G \\\n\
-  -smp 5 \\\n\
-  -cdrom /home/android/iso/android-x86.iso \\\n\
-  -boot d \\\n\
-  -net nic -net user,hostfwd=tcp::5555-:5555 \\\n\
-  -vga virtio \\\n\
-  -display sdl &\n\
-# Wait for Android to boot\n\
-sleep 60\n\
-# Attempt to connect ADB and enable TCP/IP mode\n\
-adb connect 127.0.0.1:5555\n\
-adb -s 127.0.0.1:5555 shell \"setprop service.adb.tcp.port 5555; stop adbd; start adbd\"\n\
-sleep 5\n\
-adb connect 127.0.0.1:5555\n\
-# Launch scrcpy\n\
-scrcpy --serial 127.0.0.1:5555 --bit-rate 8M --max-size 1024\n' > /home/android/start.sh && chmod +x /home/android/start.sh
+# Copy files
+COPY --chown=ps2user:ps2user start.sh /start.sh
+COPY --chown=ps2user:ps2user upload_app.py /home/ps2user/upload_app.py
+COPY nginx.conf /etc/nginx/nginx.conf
 
-ENTRYPOINT ["/home/android/start.sh"]
+# Make script executable
+RUN chmod +x /start.sh
+
+# Expose single port
+EXPOSE 6080
+
+CMD ["/start.sh"]
