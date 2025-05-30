@@ -1,0 +1,45 @@
+{
+  "log": {
+    "access": "/dev/stdout",
+    "error": "/dev/stderr",
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "eldaa",
+            "level": 0
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/xray/cl.pem",
+              "keyFile": "/etc/ssl/xray/cl.key"
+            }
+          ]
+        },
+        "wsSettings": {
+          "path": "/vless",
+          "headers": {
+            "Host": "www.freefiremobile.com"
+          }
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    }
+  ]
+}
